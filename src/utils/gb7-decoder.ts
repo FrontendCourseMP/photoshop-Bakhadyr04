@@ -1,15 +1,13 @@
-const GB7_SIGNATURE = [0x47, 0x42, 0x37, 0x1d];
-const HEADER_SIZE = 12;
+import type { LoadedImagePayload } from '../types/image';
 
-function expand7BitTo8Bit(value) {
+export const GB7_SIGNATURE = [0x47, 0x42, 0x37, 0x1d] as const;
+export const HEADER_SIZE = 12;
+
+function expand7BitTo8Bit(value: number): number {
   return Math.round((value / 127) * 255);
 }
 
-export function decodeGB7(buffer) {
-  if (!(buffer instanceof ArrayBuffer)) {
-    throw new Error('GB7 decoder expects an ArrayBuffer.');
-  }
-
+export function decodeGB7(buffer: ArrayBuffer): LoadedImagePayload {
   if (buffer.byteLength < HEADER_SIZE) {
     throw new Error('GB7 file is too small to contain a valid header.');
   }
@@ -73,5 +71,3 @@ export function decodeGB7(buffer) {
     colorDepth: hasMask ? '7-bit + 1-bit mask' : '7-bit grayscale',
   };
 }
-
-export { GB7_SIGNATURE, HEADER_SIZE };

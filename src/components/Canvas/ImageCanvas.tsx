@@ -1,10 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './ImageCanvas.module.css';
 
-export default function ImageCanvas({ imageData, loading }) {
-  const frameRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [viewport, setViewport] = useState({ width: 0, height: 0 });
+interface ImageCanvasProps {
+  imageData: ImageData | null;
+  fileName: string;
+  error: string;
+}
+
+interface ViewportSize {
+  width: number;
+  height: number;
+}
+
+export default function ImageCanvas({
+  imageData,
+  fileName,
+  error,
+}: ImageCanvasProps) {
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [viewport, setViewport] = useState<ViewportSize>({ width: 0, height: 0 });
 
   useEffect(() => {
     const frame = frameRef.current;
@@ -45,6 +60,10 @@ export default function ImageCanvas({ imageData, loading }) {
     canvas.style.height = `${drawHeight}px`;
 
     const context = canvas.getContext('2d');
+    if (!context) {
+      return;
+    }
+
     context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     context.clearRect(0, 0, drawWidth, drawHeight);
     context.imageSmoothingEnabled = false;
@@ -52,34 +71,34 @@ export default function ImageCanvas({ imageData, loading }) {
     const buffer = document.createElement('canvas');
     buffer.width = imageData.width;
     buffer.height = imageData.height;
-
     const bufferContext = buffer.getContext('2d');
+    if (!bufferContext) {
+      return;
+    }
+
     bufferContext.putImageData(imageData, 0, 0);
     context.drawImage(buffer, 0, 0, drawWidth, drawHeight);
   }, [imageData, viewport]);
 
   return (
-    <div className={styles.panel}>
-      <div className={styles.header}>
-        <div>
-          <p className={styles.overline}>Canvas Preview</p>
-          <h2>Адаптивное отображение изображения</h2>
-        </div>
+    <section className={styles.panel}>
+      <div className={styles.topline}>
+        {/* <span>{fileName || 'Без имени'}</span>
+        <span>{imageData ? `${imageData.width} × ${imageData.height}` : 'Нет файла'}</span> */}
       </div>
 
       <div ref={frameRef} className={styles.stage}>
         {imageData ? (
           <canvas ref={canvasRef} className={styles.canvas} />
         ) : (
-          <div className={styles.placeholder}>
-            <p>{loading ? 'Подготавливаем изображение...' : 'Изображение пока не загружено'}</p>
-            <span>
-              Canvas автоматически сохраняет пропорции и адаптируется под
-              ширину экрана.
-            </span>
+          <div className={styles.emptyState}>
+            <p>Откройте PNG, JPG или GB7 через меню «Файл»</p>
+            {error ? <span>{error}</span> : null}
           </div>
         )}
       </div>
-    </div>
+
+      {imageData && error ? <div className={styles.inlineError}>{error}</div> : null}
+    </section>
   );
 }

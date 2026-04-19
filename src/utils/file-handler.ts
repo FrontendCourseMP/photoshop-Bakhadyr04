@@ -1,3 +1,4 @@
+import type { DownloadRequest, ImageFormat, LoadedImagePayload } from '../types/image';
 import { encodeGB7 } from './gb7-encoder';
 import {
   canvasToBlob,
@@ -6,21 +7,21 @@ import {
   hasTransparentPixels,
 } from './image-processor';
 
-const ACCEPTED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gb7'];
-const ACCEPTED_MIME = {
+const ACCEPTED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gb7'] as const;
+const ACCEPTED_MIME: Record<ImageFormat, string[]> = {
   png: ['image/png'],
   jpg: ['image/jpeg'],
   gb7: ['application/octet-stream', ''],
 };
 
-export function sniffFormat(file) {
+export function sniffFormat(file: File): ImageFormat {
   const extension = file.name.split('.').pop()?.toLowerCase();
 
-  if (!extension || !ACCEPTED_EXTENSIONS.includes(extension)) {
+  if (!extension || !ACCEPTED_EXTENSIONS.includes(extension as (typeof ACCEPTED_EXTENSIONS)[number])) {
     throw new Error('Поддерживаются только файлы PNG, JPG/JPEG и GB7.');
   }
 
-  const normalized = extension === 'jpeg' ? 'jpg' : extension;
+  const normalized = (extension === 'jpeg' ? 'jpg' : extension) as ImageFormat;
   const expectedMime = ACCEPTED_MIME[normalized];
 
   if (
@@ -35,7 +36,10 @@ export function sniffFormat(file) {
   return normalized;
 }
 
-export async function loadStandardImage(file, format) {
+export async function loadStandardImage(
+  file: File,
+  format: Extract<ImageFormat, 'png' | 'jpg'>,
+): Promise<LoadedImagePayload> {
   const bitmap = await createImageBitmap(file);
   const width = bitmap.width;
   const height = bitmap.height;
@@ -43,6 +47,12 @@ export async function loadStandardImage(file, format) {
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext('2d', { willReadFrequently: true });
+
+  if (!context) {
+    bitmap.close?.();
+    throw new Error('Не удалось получить 2D-контекст для чтения изображения.');
+  }
+
   context.drawImage(bitmap, 0, 0);
   const imageData = context.getImageData(0, 0, width, height);
   const hasMask = format === 'png' ? hasTransparentPixels(imageData) : false;
@@ -64,11 +74,11 @@ export async function downloadImage({
   format,
   fileName,
   includeMask,
-}) {
-  let blob;
-  let extension;
-  const resolvedWidth = width || imageData?.width || 0;
-  const resolvedHeight = height || imageData?.height || 0;
+}: DownloadRequest): Promise<void> {
+  let blob: Blob;
+  let extension: ImageFormat;
+  const resolvedWidth = width || imageData.width || 0;
+  const resolvedHeight = height || imageData.height || 0;
 
   if (!imageData || !resolvedWidth || !resolvedHeight) {
     throw new Error('Нет изображения для сохранения.');
@@ -81,20 +91,17 @@ export async function downloadImage({
       extension = 'png';
       break;
     }
-
     case 'jpg': {
       const canvas = createCanvasFromImageData(imageData, { flattenAlpha: true });
       blob = await canvasToBlob(canvas, 'image/jpeg', 0.92);
       extension = 'jpg';
       break;
     }
-
     case 'gb7': {
       blob = await encodeGB7(imageData, includeMask);
       extension = 'gb7';
       break;
     }
-
     default:
       throw new Error(`Неподдерживаемый формат сохранения: ${format}.`);
   }

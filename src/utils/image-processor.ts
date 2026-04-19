@@ -1,11 +1,13 @@
-function ensureCanvas(width, height) {
+function ensureCanvas(width: number, height: number): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
   return canvas;
 }
 
-export async function imageDataFromSource(source) {
+export async function imageDataFromSource(
+  source: ImageData | HTMLCanvasElement,
+): Promise<{ imageData: ImageData; width: number; height: number }> {
   if (source instanceof ImageData) {
     return {
       imageData: source,
@@ -14,23 +16,32 @@ export async function imageDataFromSource(source) {
     };
   }
 
-  if (source instanceof HTMLCanvasElement) {
-    const context = source.getContext('2d');
-    return {
-      imageData: context.getImageData(0, 0, source.width, source.height),
-      width: source.width,
-      height: source.height,
-    };
+  const context = source.getContext('2d');
+  if (!context) {
+    throw new Error('Не удалось получить 2D-контекст canvas.');
   }
 
-  throw new Error('Поддерживаются только ImageData и HTMLCanvasElement.');
+  return {
+    imageData: context.getImageData(0, 0, source.width, source.height),
+    width: source.width,
+    height: source.height,
+  };
 }
 
-export function createCanvasFromImageData(imageData, { flattenAlpha = false } = {}) {
+export function createCanvasFromImageData(
+  imageData: ImageData,
+  options: { flattenAlpha?: boolean } = {},
+): HTMLCanvasElement {
+  const { flattenAlpha = false } = options;
   const canvas = ensureCanvas(imageData.width, imageData.height);
   const context = canvas.getContext('2d');
   const buffer = ensureCanvas(imageData.width, imageData.height);
   const bufferContext = buffer.getContext('2d');
+
+  if (!context || !bufferContext) {
+    throw new Error('Не удалось создать canvas для обработки изображения.');
+  }
+
   bufferContext.putImageData(imageData, 0, 0);
 
   if (flattenAlpha) {
@@ -44,24 +55,24 @@ export function createCanvasFromImageData(imageData, { flattenAlpha = false } = 
   return canvas;
 }
 
-export function canvasToBlob(canvas, type, quality) {
+export function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  type: string,
+  quality?: number,
+): Promise<Blob> {
   return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) {
-          reject(new Error('Браузер не смог создать Blob из Canvas.'));
-          return;
-        }
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        reject(new Error('Браузер не смог создать Blob из Canvas.'));
+        return;
+      }
 
-        resolve(blob);
-      },
-      type,
-      quality,
-    );
+      resolve(blob);
+    }, type, quality);
   });
 }
 
-export function downloadBlob(blob, fileName) {
+export function downloadBlob(blob: Blob, fileName: string): void {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
@@ -70,7 +81,7 @@ export function downloadBlob(blob, fileName) {
   setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-export function formatFileSize(size) {
+export function formatFileSize(size: number): string {
   if (!size) {
     return '0 B';
   }
@@ -87,7 +98,7 @@ export function formatFileSize(size) {
   return `${value >= 10 ? value.toFixed(0) : value.toFixed(1)} ${units[unitIndex]}`;
 }
 
-export function hasTransparentPixels(imageData) {
+export function hasTransparentPixels(imageData: ImageData): boolean {
   const { data } = imageData;
 
   for (let index = 3; index < data.length; index += 4) {

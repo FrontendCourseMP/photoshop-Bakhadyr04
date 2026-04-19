@@ -1,43 +1,31 @@
 .panel {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
   height: 100%;
-  min-height: 540px;
-  padding: 20px;
-  border-radius: 28px;
-  background: rgba(17, 24, 39, 0.92);
-  color: #f5f7fa;
-  box-shadow: 0 26px 60px rgba(17, 24, 39, 0.28);
 }
 
-.header {
-  margin-bottom: 16px;
-}
-
-.overline {
-  margin: 0 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.75rem;
-  color: rgba(255, 216, 164, 0.82);
-}
-
-.header h2 {
-  margin: 0;
-  font-size: 1.35rem;
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: #9096a1;
+  font-size: 0.86rem;
 }
 
 .stage {
   display: grid;
   place-items: center;
-  min-height: 430px;
-  height: calc(100% - 64px);
-  padding: 18px;
-  border-radius: 24px;
+  min-height: 520px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
   background:
-    linear-gradient(45deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(255, 255, 255, 0.04) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.04) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.04) 75%),
-    linear-gradient(180deg, rgba(50, 61, 79, 0.9), rgba(16, 23, 33, 0.96));
+    linear-gradient(45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.03) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.03) 75%),
+    #1a1c21;
   background-size: 24px 24px, 24px 24px, 24px 24px, 24px 24px, cover;
   background-position:
     0 0,
@@ -51,36 +39,36 @@
   display: block;
   max-width: 100%;
   max-height: 100%;
-  border-radius: 18px;
-  box-shadow: 0 16px 46px rgba(0, 0, 0, 0.3);
   image-rendering: pixelated;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
 }
 
-.placeholder {
+.emptyState {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   justify-items: center;
-  max-width: 420px;
+  color: #ffffff;
   text-align: center;
 }
 
-.placeholder p {
+.emptyState p,
+.emptyState span,
+.inlineError {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
 }
 
-.placeholder span {
-  color: rgba(245, 247, 250, 0.72);
+.inlineError {
+  color: #dca4a4;
+  font-size: 0.92rem;
 }
 
 @media (max-width: 640px) {
-  .panel {
-    min-height: 420px;
-    padding: 16px;
+  .stage {
+    min-height: 360px;
+    padding: 12px;
   }
 
-  .stage {
-    min-height: 320px;
+  .topline {
+    font-size: 0.8rem;
   }
 }

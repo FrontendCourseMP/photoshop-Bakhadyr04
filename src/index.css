@@ -1,13 +1,10 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #15202b;
-  background:
-    radial-gradient(circle at top left, rgba(255, 198, 109, 0.55), transparent 28%),
-    radial-gradient(circle at top right, rgba(64, 145, 255, 0.18), transparent 24%),
-    linear-gradient(180deg, #fff8ef 0%, #f5f7fb 52%, #edf2f7 100%);
+  color: #f3f4f6;
+  background: #1b1d22;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -27,6 +24,8 @@ body,
 
 body {
   min-width: 320px;
+  margin: 0;
+  background: #1b1d22;
 }
 
 button,

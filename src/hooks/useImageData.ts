@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { decodeGB7 } from '../utils/gb7-decoder';
 import { downloadImage, loadStandardImage, sniffFormat } from '../utils/file-handler';
+import type { ImageFormat, ImageMetadata } from '../types/image';
 
-const emptyMetadata = {
+const emptyMetadata: ImageMetadata = {
   width: 0,
   height: 0,
   colorDepth: '',
@@ -12,9 +13,20 @@ const emptyMetadata = {
   hasMask: false,
 };
 
-export function useImageData() {
-  const [imageData, setImageData] = useState(null);
-  const [metadata, setMetadata] = useState(emptyMetadata);
+interface UseImageDataResult {
+  imageData: ImageData | null;
+  metadata: ImageMetadata;
+  error: string;
+  loading: boolean;
+  hasImage: boolean;
+  loadImage: (file: File) => Promise<void>;
+  downloadAs: (format: ImageFormat) => Promise<void>;
+  clearImage: () => void;
+}
+
+export function useImageData(): UseImageDataResult {
+  const [imageData, setImageData] = useState<ImageData | null>(null);
+  const [metadata, setMetadata] = useState<ImageMetadata>(emptyMetadata);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -24,20 +36,16 @@ export function useImageData() {
     setError('');
   };
 
-  const loadImage = async (file) => {
+  const loadImage = async (file: File) => {
     setLoading(true);
     setError('');
 
     try {
       const format = sniffFormat(file);
-      let payload;
-
-      if (format === 'gb7') {
-        const buffer = await file.arrayBuffer();
-        payload = decodeGB7(buffer);
-      } else {
-        payload = await loadStandardImage(file, format);
-      }
+      const payload =
+        format === 'gb7'
+          ? decodeGB7(await file.arrayBuffer())
+          : await loadStandardImage(file, format);
 
       setImageData(payload.imageData);
       setMetadata({
@@ -47,17 +55,21 @@ export function useImageData() {
         format,
         fileSize: file.size,
         fileName: file.name.replace(/\.[^.]+$/, ''),
-        hasMask: Boolean(payload.hasMask),
+        hasMask: payload.hasMask,
       });
     } catch (loadError) {
       clearImage();
-      setError(loadError instanceof Error ? loadError.message : 'Не удалось прочитать файл.');
+      setError(
+        loadError instanceof Error
+          ? loadError.message
+          : 'Не удалось прочитать файл.',
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  const downloadAs = async (format) => {
+  const downloadAs = async (format: ImageFormat) => {
     if (!imageData) {
       return;
     }
@@ -71,6 +83,7 @@ export function useImageData() {
         fileName: metadata.fileName || 'image-export',
         includeMask: metadata.hasMask,
       });
+      setError('');
     } catch (downloadError) {
       setError(
         downloadError instanceof Error

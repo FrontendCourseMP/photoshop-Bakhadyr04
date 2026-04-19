@@ -1,11 +1,14 @@
-import { imageDataFromSource } from './image-processor';
 import { GB7_SIGNATURE, HEADER_SIZE } from './gb7-decoder';
+import { imageDataFromSource } from './image-processor';
 
-function compress8BitTo7Bit(gray) {
+function compress8BitTo7Bit(gray: number): number {
   return Math.round((gray / 255) * 127);
 }
 
-export async function encodeGB7(source, includeMask = false) {
+export async function encodeGB7(
+  source: ImageData | HTMLCanvasElement,
+  includeMask = false,
+): Promise<Blob> {
   const { imageData, width, height } = await imageDataFromSource(source);
 
   if (width > 0xffff || height > 0xffff) {
