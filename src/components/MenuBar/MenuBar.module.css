@@ -92,6 +92,15 @@
     padding: 12px;
   }
 
+  .leftSection {
+    gap: 8px;
+  }
+
+  .menuButton {
+    min-width: auto;
+    padding: 10px 14px;
+  }
+
   .dropdown {
     width: min(320px, calc(100vw - 24px));
   }

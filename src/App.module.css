@@ -20,13 +20,41 @@
 
 .workspace {
   min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 18px;
   padding: 18px;
   background:
     linear-gradient(180deg, rgba(30, 32, 39, 0.98), rgba(24, 26, 32, 0.98));
 }
 
+.workspace:has(.sidebar) {
+  grid-template-columns: 260px minmax(0, 1fr);
+}
+
+.sidebar {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-self: stretch;
+  gap: 14px;
+}
+
 .hiddenInput {
   display: none;
+}
+
+@media (max-width: 900px) {
+  .workspace,
+  .workspace:has(.sidebar) {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    min-height: auto;
+    order: 2;
+  }
 }
 
 @media (max-width: 640px) {
@@ -40,6 +68,7 @@
   }
 
   .workspace {
+    gap: 10px;
     padding: 10px;
   }
 }

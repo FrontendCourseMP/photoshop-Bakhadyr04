@@ -1,0 +1,69 @@
+.panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  background: rgba(37, 40, 47, 0.9);
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+}
+
+.header h2,
+.header span {
+  margin: 0;
+}
+
+.header h2 {
+  color: #f2f3f5;
+  font-size: 0.98rem;
+}
+
+.header span {
+  color: #99a1af;
+  font-size: 0.83rem;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.button,
+.buttonActive {
+  border-radius: 12px;
+  padding: 12px 10px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease,
+    transform 120ms ease;
+}
+
+.button {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #31353d;
+  color: #eef1f6;
+}
+
+.buttonActive {
+  border: 1px solid rgba(255, 214, 102, 0.6);
+  background: linear-gradient(180deg, #67562a, #4f4324);
+  color: #fff6dd;
+}
+
+.button:hover:enabled,
+.buttonActive:hover:enabled {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  color: #808796;
+}

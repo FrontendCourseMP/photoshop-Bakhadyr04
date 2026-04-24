@@ -4,8 +4,10 @@ import type { ImageFormat } from '../../types/image';
 
 interface MenuBarProps {
   menuOpen: boolean;
+  toolsOpen: boolean;
   onToggleMenu: () => void;
   onCloseMenu: () => void;
+  onToggleTools: () => void;
   onOpenFile: () => void;
   onDownload: (format: ImageFormat) => void;
   onClear: () => void;
@@ -15,8 +17,10 @@ interface MenuBarProps {
 
 export default function MenuBar({
   menuOpen,
+  toolsOpen,
   onToggleMenu,
   onCloseMenu,
+  onToggleTools,
   onOpenFile,
   onDownload,
   onClear,
@@ -102,13 +106,16 @@ export default function MenuBar({
           ) : null}
         </div>
 
+        <button
+          type="button"
+          className={`${styles.menuButton} ${toolsOpen ? styles.menuButtonActive : ''}`}
+          onClick={onToggleTools}
+        >
+          Инструменты
+        </button>
       </div>
 
-      {/* <div className={styles.rightSection}>
-        <span>{loading ? 'Чтение файла...' : 'Готово'}</span>
-      </div> */}
       <div className={styles.appLabel}>Image Editor</div>
-
     </header>
   );
 }

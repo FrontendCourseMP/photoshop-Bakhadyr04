@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './ImageCanvas.module.css';
+import type { ToolMode } from '../../types/editor';
 
 interface ImageCanvasProps {
   imageData: ImageData | null;
+  sourceImageData: ImageData | null;
   fileName: string;
   error: string;
+  activeTool: ToolMode;
+  onPickPixel: (x: number, y: number) => void;
 }
 
 interface ViewportSize {
@@ -14,8 +18,11 @@ interface ViewportSize {
 
 export default function ImageCanvas({
   imageData,
+  sourceImageData,
   fileName,
   error,
+  activeTool,
+  onPickPixel,
 }: ImageCanvasProps) {
   const frameRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -80,6 +87,26 @@ export default function ImageCanvas({
     context.drawImage(buffer, 0, 0, drawWidth, drawHeight);
   }, [imageData, viewport]);
 
+  const handleCanvasClick = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    if (activeTool !== 'eyedropper' || !sourceImageData) {
+      return;
+    }
+
+    const rect = event.currentTarget.getBoundingClientRect();
+    const scaleX = sourceImageData.width / rect.width;
+    const scaleY = sourceImageData.height / rect.height;
+    const x = Math.min(
+      sourceImageData.width - 1,
+      Math.max(0, Math.floor((event.clientX - rect.left) * scaleX)),
+    );
+    const y = Math.min(
+      sourceImageData.height - 1,
+      Math.max(0, Math.floor((event.clientY - rect.top) * scaleY)),
+    );
+
+    onPickPixel(x, y);
+  };
+
   return (
     <section className={styles.panel}>
       <div className={styles.topline}>
@@ -89,7 +116,11 @@ export default function ImageCanvas({
 
       <div ref={frameRef} className={styles.stage}>
         {imageData ? (
-          <canvas ref={canvasRef} className={styles.canvas} />
+          <canvas
+            ref={canvasRef}
+            className={`${styles.canvas} ${activeTool === 'eyedropper' ? styles.canvasEyedropper : ''}`}
+            onClick={handleCanvasClick}
+          />
         ) : (
           <div className={styles.emptyState}>
             <p>Откройте PNG, JPG или GB7 через меню «Файл»</p>

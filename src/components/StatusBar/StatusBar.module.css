@@ -10,6 +10,10 @@
   font-size: 0.85rem;
 }
 
+.bar span {
+  white-space: nowrap;
+}
+
 @media (max-width: 640px) {
   .bar {
     gap: 12px;
