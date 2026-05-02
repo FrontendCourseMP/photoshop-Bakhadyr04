@@ -73,7 +73,8 @@ export default function ImageCanvas({
 
     context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     context.clearRect(0, 0, drawWidth, drawHeight);
-    context.imageSmoothingEnabled = false;
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = 'high';
 
     const buffer = document.createElement('canvas');
     buffer.width = imageData.width;

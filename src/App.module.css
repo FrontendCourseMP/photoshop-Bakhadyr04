@@ -1,6 +1,7 @@
 .shell {
-  min-height: 100vh;
+  height: 100vh;
   padding: 16px;
+  overflow: hidden;
   background:
     radial-gradient(circle at top left, rgba(79, 84, 97, 0.18), transparent 18%),
     radial-gradient(circle at bottom right, rgba(76, 88, 124, 0.14), transparent 20%),
@@ -8,7 +9,8 @@
 }
 
 .window {
-  min-height: calc(100vh - 32px);
+  height: 100%;
+  min-height: 0;
   display: grid;
   grid-template-rows: auto 1fr auto;
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -25,6 +27,7 @@
   align-items: stretch;
   gap: 18px;
   padding: 18px;
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(30, 32, 39, 0.98), rgba(24, 26, 32, 0.98));
 }
@@ -34,11 +37,13 @@
 }
 
 .sidebar {
+  min-width: 0;
   min-height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
   align-self: stretch;
   gap: 14px;
+  overflow: hidden;
 }
 
 .hiddenInput {
@@ -63,7 +68,6 @@
   }
 
   .window {
-    min-height: calc(100vh - 16px);
     border-radius: 12px;
   }
 

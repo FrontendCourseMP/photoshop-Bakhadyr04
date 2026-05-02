@@ -37,7 +37,7 @@ export default function App() {
   const [pixelSample, setPixelSample] = useState<PixelSample | null>(null);
 
   useEffect(() => {
-    setChannelState((current) => normalizeChannelState(imageData, current));
+    setChannelState(normalizeChannelState(imageData, createDefaultChannelState()));
 
     if (!imageData) {
       setActiveTool('pan');
@@ -88,6 +88,7 @@ export default function App() {
     const file = event.target.files?.[0];
     if (file) {
       await loadImage(file);
+      setToolsOpen(true);
     }
 
     event.target.value = '';

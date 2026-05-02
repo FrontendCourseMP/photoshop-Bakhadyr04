@@ -1,12 +1,14 @@
 .panel {
+  min-height: 0;
   height: 100%;
   display: grid;
   grid-template-rows: auto 1fr;
-  gap: 14px;
-  padding: 16px;
+  gap: 10px;
+  padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 16px;
   background: rgba(37, 40, 47, 0.9);
+  overflow: hidden;
 }
 
 .header {
@@ -34,17 +36,19 @@
 .grid {
   display: grid;
   align-content: start;
-  gap: 10px;
+  gap: 8px;
+  min-height: 0;
 }
 
 .card,
 .cardActive {
   display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 12px;
+  grid-template-columns: 56px 1fr;
+  gap: 10px;
   align-items: center;
-  padding: 10px;
-  border-radius: 14px;
+  min-width: 0;
+  padding: 8px;
+  border-radius: 12px;
   text-align: left;
   cursor: pointer;
   transition:
@@ -69,11 +73,11 @@
 }
 
 .preview {
-  width: 72px;
-  height: 72px;
-  border-radius: 10px;
-  object-fit: cover;
-  image-rendering: pixelated;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: contain;
+  image-rendering: auto;
   background:
     linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
     linear-gradient(-45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
@@ -96,12 +100,12 @@
 
 .name {
   color: #f5f7fa;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .state {
   color: #b4bbc8;
-  font-size: 0.82rem;
-  margin-top: 4px;
+  font-size: 0.78rem;
+  margin-top: 2px;
 }

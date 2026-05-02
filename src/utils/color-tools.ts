@@ -12,7 +12,7 @@ interface ImageCharacteristics {
   hasAlpha: boolean;
 }
 
-const previewSize = 72;
+const previewSize = 192;
 
 const srgbToLinear = (value: number): number => {
   const normalized = value / 255;
@@ -188,8 +188,14 @@ function drawChannelPreview(source: ImageData, channelId: ChannelId): string {
   }
 
   bufferContext.putImageData(new ImageData(previewData, source.width, source.height), 0, 0);
-  context.imageSmoothingEnabled = false;
-  context.drawImage(buffer, 0, 0, previewSize, previewSize);
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = 'high';
+  const scale = Math.min(previewSize / source.width, previewSize / source.height);
+  const width = Math.max(1, Math.round(source.width * scale));
+  const height = Math.max(1, Math.round(source.height * scale));
+  const left = Math.floor((previewSize - width) / 2);
+  const top = Math.floor((previewSize - height) / 2);
+  context.drawImage(buffer, left, top, width, height);
 
   return canvas.toDataURL();
 }
