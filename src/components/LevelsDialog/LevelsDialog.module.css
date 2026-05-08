@@ -1,0 +1,332 @@
+.dialog {
+  width: min(1020px, calc(100vw - 32px));
+  max-height: min(92vh, 820px);
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  color: #f4f6fb;
+  background: #252830;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.55);
+}
+
+.dialog::backdrop {
+  background: rgba(6, 8, 12, 0.62);
+  backdrop-filter: blur(5px);
+}
+
+.content {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+}
+
+.header,
+.controlsRow,
+.footer,
+.footerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header,
+.footer {
+  justify-content: space-between;
+}
+
+.header h2,
+.header span {
+  margin: 0;
+}
+
+.header h2 {
+  color: #ffffff;
+  font-size: 1.12rem;
+}
+
+.header span,
+.field span,
+.previewToggle,
+.axis,
+.numericGrid span {
+  color: #a7afbd;
+  font-size: 0.82rem;
+}
+
+.iconButton {
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #d7dde8;
+  background: #30343d;
+  cursor: pointer;
+}
+
+.controlsRow {
+  flex-wrap: wrap;
+}
+
+.field,
+.numericGrid label {
+  display: grid;
+  gap: 6px;
+}
+
+.field {
+  min-width: 180px;
+}
+
+.field select,
+.numericGrid input {
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #f3f6fb;
+  background: #1d2027;
+}
+
+.field select {
+  padding: 0 10px;
+}
+
+.previewToggle {
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 0 10px;
+}
+
+.previewToggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: #8fbfff;
+}
+
+.previewLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  align-items: stretch;
+  gap: 18px;
+}
+
+.histogramBlock {
+  display: grid;
+  grid-template-rows: 190px auto 42px;
+  gap: 8px;
+  min-width: 0;
+}
+
+.histogram {
+  width: 100%;
+  height: 190px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: #111318;
+}
+
+.previewPanel {
+  display: grid;
+  align-items: start;
+  min-height: 240px;
+  min-width: 0;
+}
+
+.previewCanvas {
+  width: 280px;
+  height: 240px;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background:
+    linear-gradient(45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(255, 255, 255, 0.06) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.06) 75%),
+    #111318;
+  background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, cover;
+  background-position:
+    0 0,
+    0 9px,
+    9px -9px,
+    -9px 0,
+    0 0;
+}
+
+.axis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.axis span:nth-child(2) {
+  text-align: center;
+}
+
+.axis span:last-child {
+  text-align: right;
+}
+
+.levelTrack {
+  position: relative;
+  height: 42px;
+  padding-top: 13px;
+  touch-action: none;
+}
+
+.trackGradient {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 16px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #050607, #8e96a3 50%, #ffffff);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.activeRange {
+  position: absolute;
+  top: 14px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(143, 191, 255, 0.38);
+  pointer-events: none;
+}
+
+.marker {
+  width: 100%;
+  position: absolute;
+  top: 22px;
+  width: 26px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: ew-resize;
+  transform: translateX(-50%);
+}
+
+.marker::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-right: 10px solid transparent;
+  border-bottom: 16px solid #f4f6fb;
+  border-left: 10px solid transparent;
+  transform: translateX(-50%);
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.55));
+}
+
+.marker:focus-visible {
+  outline: 2px solid #8fbfff;
+  outline-offset: 4px;
+}
+
+.blackMarker::before {
+  border-bottom-color: #111318;
+}
+
+.gammaMarker::before {
+  border-bottom-color: #9dc8ff;
+}
+
+.whiteMarker::before {
+  border-bottom-color: #f8fafc;
+}
+
+.numericGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.numericGrid input {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.secondaryButton,
+.primaryButton {
+  min-width: 96px;
+  height: 38px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease,
+    transform 120ms ease;
+}
+
+.secondaryButton {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #eef2f8;
+  background: #30343d;
+}
+
+.primaryButton {
+  border: 1px solid rgba(143, 191, 255, 0.58);
+  color: #071019;
+  background: #8fbfff;
+}
+
+.secondaryButton:hover,
+.primaryButton:hover:enabled,
+.iconButton:hover {
+  transform: translateY(-1px);
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: 14px;
+  }
+
+  .field,
+  .previewToggle {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .numericGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .previewLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .previewPanel {
+    min-height: 190px;
+  }
+
+  .previewCanvas {
+    width: 100%;
+    height: 190px;
+  }
+
+  .footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .footerActions {
+    justify-content: stretch;
+  }
+
+  .secondaryButton,
+  .primaryButton {
+    flex: 1;
+  }
+}

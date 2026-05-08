@@ -20,6 +20,7 @@ interface UseImageDataResult {
   loading: boolean;
   hasImage: boolean;
   loadImage: (file: File) => Promise<void>;
+  replaceImageData: (nextImageData: ImageData) => void;
   downloadAs: (format: ImageFormat) => Promise<void>;
   clearImage: () => void;
 }
@@ -69,6 +70,16 @@ export function useImageData(): UseImageDataResult {
     }
   };
 
+  const replaceImageData = (nextImageData: ImageData) => {
+    setImageData(nextImageData);
+    setMetadata((current) => ({
+      ...current,
+      width: nextImageData.width,
+      height: nextImageData.height,
+    }));
+    setError('');
+  };
+
   const downloadAs = async (format: ImageFormat) => {
     if (!imageData) {
       return;
@@ -100,6 +111,7 @@ export function useImageData(): UseImageDataResult {
     loading,
     hasImage: Boolean(imageData),
     loadImage,
+    replaceImageData,
     downloadAs,
     clearImage,
   };

@@ -4,12 +4,14 @@ import type { ToolMode } from '../../types/editor';
 interface ToolPanelProps {
   activeTool: ToolMode;
   onSelectTool: (tool: ToolMode) => void;
+  onOpenLevels: () => void;
   hasImage: boolean;
 }
 
 export default function ToolPanel({
   activeTool,
   onSelectTool,
+  onOpenLevels,
   hasImage,
 }: ToolPanelProps) {
   return (
@@ -34,6 +36,14 @@ export default function ToolPanel({
           disabled={!hasImage}
         >
           Пипетка
+        </button>
+        <button
+          type="button"
+          className={styles.button}
+          onClick={onOpenLevels}
+          disabled={!hasImage}
+        >
+          Уровни
         </button>
       </div>
     </section>
